@@ -17,6 +17,8 @@ import os
 # take environment variables
 load_dotenv()
 
+SERVER_TYPE_STATUS = os.environ.get("SERVER_TYPE_STATUS")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,7 +45,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
+    "rest_framework",
+    "drf_spectacular",
 ]
+
+if SERVER_TYPE_STATUS == "development":
+    INSTALLED_APPS.append("debug_toolbar")
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -54,6 +61,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if SERVER_TYPE_STATUS == "development":
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "base.urls"
 
@@ -77,7 +87,7 @@ WSGI_APPLICATION = "base.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-print(os.environ.get("PG_DATABASE_NAME"))
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -131,4 +141,24 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# The project user model reference:
 AUTH_USER_MODEL = "core.User"
+
+# debug-toolbar IP:
+if SERVER_TYPE_STATUS == "development":
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+
+# Rest Framework settings:
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+# swagger ui settings:
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Rest-Market",
+    "DESCRIPTION": "Rest-Market Django Rest API project",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}

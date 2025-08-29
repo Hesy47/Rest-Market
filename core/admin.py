@@ -55,4 +55,4 @@ class UserAdmin(BaseUserAdmin):
 
     ordering = ["id"]
     search_fields = ["username"]
-    list_display = 16
+    list_per_page = 16

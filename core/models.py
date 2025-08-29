@@ -17,7 +17,7 @@ class UserManager(BaseUserManager):
         if not password:
             raise ValueError("each user must have a password")
 
-        email = self.normalize_email()
+        email = self.normalize_email(email)
         username = username.strip()
 
         user = self.model(email=email, username=username, **extra_fields)
@@ -25,6 +25,15 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
+
+    def create_superuser(
+        self, email: str, username: str, password: str, **extra_fields
+    ):
+        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        return self.create_user(email, username, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):

@@ -16,8 +16,21 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from drf_spectacular.views import SpectacularSwaggerView, SpectacularAPIView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("core/", include("core.urls")),
+    path("docs/", SpectacularSwaggerView.as_view(), name="schema"),
+    path("docs/download", SpectacularAPIView.as_view(), name="schema"),
 ]
+
+if settings.SERVER_TYPE_STATUS == "development":
+    from debug_toolbar.toolbar import debug_toolbar_urls
+
+    urlpatterns = [
+        *urlpatterns,
+    ] + debug_toolbar_urls()
