@@ -1,10 +1,34 @@
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
 
 
 class SignupSerializer(serializers.Serializer):
-    pass
+    """The signup endpoint serializer"""
+
+    email = serializers.EmailField(
+        max_length=60,
+        validators=[
+            UniqueValidator(
+                queryset=get_user_model().objects.all(),
+                message="This email address is already in use"
+            )
+        ],
+
+    )
+
+    username = serializers.CharField(
+        max_length=30,
+        error_messages={"unique": "This username is already taken"},
+    )
+
+    phone_number = serializers.CharField(
+        max_length=11,
+        unique=True,
+        error_messages={"unique": "This phone number is already taken"},
+    )
 
 
 class LoginSerializer(serializers.Serializer):
