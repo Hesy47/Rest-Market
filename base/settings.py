@@ -159,6 +159,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+# simple jwt token settings:
 SIMPLE_JWT = {
     "ALGORITHM": "HS256",  # Hint: HS384 and HS512 can be used for more security!
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=4),
