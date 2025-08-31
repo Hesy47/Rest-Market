@@ -16,18 +16,35 @@ class SignupSerializer(serializers.Serializer):
                 message="This email address is already in use"
             )
         ],
-
+        error_messages={
+            "max_length": "The email address can be at most 60 characters",
+            "invalid": "Please enter a valid email address"
+        },
     )
 
     username = serializers.CharField(
         max_length=30,
-        error_messages={"unique": "This username is already taken"},
+        min_length=5,
+        validators=[
+            UniqueValidator(
+                queryset=get_user_model().objects.all(),
+                message="This username is already in use"),
+        ],
+        error_messages={
+            "max_length": "The username can be at most 30 characters",
+            "min_length": "The username must be at least 5 characters"
+        },
+
     )
 
     phone_number = serializers.CharField(
         max_length=11,
-        unique=True,
-        error_messages={"unique": "This phone number is already taken"},
+        validators=[
+            UniqueValidator(
+                queryset=get_user_model().objects.all(),
+                message="This phone number is already in use")
+        ],
+        error_messages={"max_length": "The phone number can be at most 11 characters"}
     )
 
 
