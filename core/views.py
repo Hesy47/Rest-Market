@@ -2,11 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from core import serializers, permissions
+from drf_spectacular.utils import extend_schema
 
 
 class WelcomeMessage(APIView):
     """Just a warm welcome message"""
 
+    @extend_schema(tags=["project info"])
     def get(self, request):
         return Response(
             {"response": "welcome to my Django Rest Framework application"},
@@ -20,15 +22,8 @@ class LoginView(APIView):
     serializer_class = serializers.LoginSerializer
     permission_classes = [permissions.IsAnonymous]
 
+    @extend_schema(tags=["core authentication"])
     def post(self, request):
-        # user = request.user
-        # print(user)
-        # if user != "AnonymousUser":
-        #     return Response(
-        #         {"response": "please logout from your current account"},
-        #         status.HTTP_403_FORBIDDEN,
-        #     )
-
         serializer = serializers.LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         response = serializer.save()

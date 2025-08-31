@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 import os
 
 # take environment variables
@@ -158,10 +159,21 @@ REST_FRAMEWORK = {
     ),
 }
 
-# swagger ui settings:
+SIMPLE_JWT = {
+    "ALGORITHM": "HS256",  # Hint: HS384 and HS512 can be used for more security!
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=4),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+# Swagger ui settings:
 SPECTACULAR_SETTINGS = {
     "TITLE": "Rest-Market",
     "DESCRIPTION": "Rest-Market Django Rest API project",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "TAGS": [
+        {"name": "project info"},
+        {"name": "core authentication"},
+    ],
 }

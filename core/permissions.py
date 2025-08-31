@@ -1,4 +1,13 @@
 from rest_framework.permissions import BasePermission
+from rest_framework.exceptions import APIException
+
+
+class CustomPermissionDenied(APIException):
+    status_code = 403
+    default_detail = "Permission denied."
+
+    def __init__(self, detail=None, code=None):
+        super().__init__({"response": detail or self.default_detail}, code)
 
 
 class IsAnonymous(BasePermission):
@@ -8,4 +17,6 @@ class IsAnonymous(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return not request.user or not request.user.is_authenticated
+        if request.user and request.user.is_authenticated:
+            raise CustomPermissionDenied("Already logged in, please Logout first")
+        return True
