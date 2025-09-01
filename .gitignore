@@ -205,3 +205,11 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Pycharm things
+/.idea/vcs.xml
+/.idea/Rest-Market.iml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/.gitignore

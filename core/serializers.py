@@ -3,6 +3,7 @@ from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
+from core import validators
 
 
 class SignupSerializer(serializers.Serializer):
@@ -10,6 +11,7 @@ class SignupSerializer(serializers.Serializer):
 
     email = serializers.EmailField(
         max_length=60,
+        required=True,
         validators=[
             UniqueValidator(
                 queryset=get_user_model().objects.all(),
@@ -18,14 +20,17 @@ class SignupSerializer(serializers.Serializer):
         ],
         error_messages={
             "max_length": "The email address can be at most 60 characters",
-            "invalid": "Please enter a valid email address"
+            "invalid": "Please enter a valid email address",
+            "required": "The email address field is required",
         },
     )
 
     username = serializers.CharField(
         max_length=30,
         min_length=5,
+        required=True,
         validators=[
+            validators.username_validator,
             UniqueValidator(
                 queryset=get_user_model().objects.all(),
                 message="This username is already in use"),
@@ -38,14 +43,36 @@ class SignupSerializer(serializers.Serializer):
     )
 
     phone_number = serializers.CharField(
-        max_length=11,
         validators=[
+            validators.phone_number_validator,
             UniqueValidator(
                 queryset=get_user_model().objects.all(),
                 message="This phone number is already in use")
         ],
-        error_messages={"max_length": "The phone number can be at most 11 characters"}
+        error_messages={
+            "max_length": "The phone number can be at most 11 characters",
+            "required": "The phone number field is required",
+        },
     )
+
+    password = serializers.CharField(
+        max_length=24,
+        min_length=8,
+        required=True,
+        validators=[validators.password_validator],
+        error_messages={
+            "max_length": "The password can be at most 24 characters long",
+            "min_length": "The password must be at least 8 characters long",
+            "required": "The password field is required",
+        }
+    )
+
+    def create(self, validated_data):
+        new_user = get_user_model().objects.create_user(**validated_data)
+        return {
+            "response": f"user with the username of: {new_user.username} "
+                        f"and id of: {new_user.id} has been created successfully"
+        }
 
 
 class LoginSerializer(serializers.Serializer):
@@ -63,6 +90,7 @@ class LoginSerializer(serializers.Serializer):
 
     password = serializers.CharField(
         required=True,
+        write_only=True,
         style={"input_type": "password"},
         error_messages={
             "required": "The password field must not be empty",

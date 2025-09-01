@@ -16,6 +16,21 @@ class WelcomeMessage(APIView):
         )
 
 
+class SignupView(APIView):
+    """The signup endpoint APIView"""
+
+    serializer_class = serializers.SignupSerializer
+    permission_classes = [permissions.IsAnonymous]
+
+    @extend_schema(tags=["core authentication"])
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        response = serializer.save()
+
+        return Response(response, status.HTTP_201_CREATED)
+
+
 class LoginView(APIView):
     """The login endpoint APIView"""
 
