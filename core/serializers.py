@@ -43,6 +43,7 @@ class SignupSerializer(serializers.Serializer):
     )
 
     phone_number = serializers.CharField(
+        required=True,
         validators=[
             validators.phone_number_validator,
             UniqueValidator(
@@ -59,6 +60,7 @@ class SignupSerializer(serializers.Serializer):
         max_length=24,
         min_length=8,
         required=True,
+        write_only=True,
         validators=[validators.password_validator],
         error_messages={
             "max_length": "The password can be at most 24 characters long",
@@ -69,6 +71,7 @@ class SignupSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         new_user = get_user_model().objects.create_user(**validated_data)
+
         return {
             "response": f"user with the username of: {new_user.username} "
                         f"and id of: {new_user.id} has been created successfully"
@@ -80,7 +83,6 @@ class LoginSerializer(serializers.Serializer):
 
     email = serializers.EmailField(
         required=True,
-        write_only=True,
         error_messages={
             "required": "The email field must not be empty",
             "blank": "The email field must not be empty",
