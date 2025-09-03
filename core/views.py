@@ -1,6 +1,9 @@
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 from rest_framework import status
+from django.contrib.auth import get_user_model
 from core import serializers, permissions
 from drf_spectacular.utils import extend_schema
 
@@ -34,7 +37,7 @@ class SignupView(APIView):
 class LoginView(APIView):
     """The login endpoint APIView"""
 
-    serializer_class = serializers.LoginSerializer
+    serializer_class = serializers.UserAdminManagementSerializer
     permission_classes = [permissions.IsAnonymous]
 
     @extend_schema(tags=["core authentication"])
@@ -44,3 +47,12 @@ class LoginView(APIView):
         response = serializer.save()
 
         return Response(response, status.HTTP_202_ACCEPTED)
+
+
+@extend_schema(tags=["core administration"])
+class AdminUserManagementView(ModelViewSet):
+    """The admin user management endpoint ViewSet"""
+
+    serializer_class = serializers.UserAdminManagementSerializer
+    permission_classes = [IsAdminUser]
+    queryset = get_user_model().objects.all()

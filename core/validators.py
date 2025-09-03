@@ -30,7 +30,8 @@ def password_validator(value: str):
 
     if not bool(re.match(pattern, value)):
         raise serializers.ValidationError(
-            "The password must contain one uppercase letter, one lowercase letter and one number"
+            "The password must contain one uppercase letter, "
+            "one lowercase letter and one number"
         )
 
     return value

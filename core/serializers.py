@@ -62,6 +62,7 @@ class SignupSerializer(serializers.Serializer):
         min_length=8,
         required=True,
         write_only=True,
+        style={"input_type": "password"},
         validators=[validators.password_validator],
         error_messages={
             "max_length": "The password can be at most 24 characters long",
@@ -73,6 +74,7 @@ class SignupSerializer(serializers.Serializer):
     password_confirmation = serializers.CharField(
         required=True,
         write_only=True,
+        style={"input_type": "password"},
     )
 
     def validate(self, attrs: dict):
@@ -90,7 +92,7 @@ class SignupSerializer(serializers.Serializer):
 
         return {
             "response": f"user with the username of: {new_user.username} "
-            f"and id of: {new_user.id} has been created successfully"
+                        f"and id of: {new_user.id} has been created successfully"
         }
 
 
@@ -138,4 +140,29 @@ class LoginSerializer(serializers.Serializer):
         return {
             "access_token": str(access_token),
             "refresh_token": str(refresh_token),
+        }
+
+
+class UserAdminManagementSerializer(serializers.ModelSerializer):
+    """The user admin management serializer"""
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "id",
+            "email",
+            "username",
+            "password",
+            "date_joined",
+            "is_active",
+            "is_staff",
+            "is_superuser"
+        )
+
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "date_joined": {"read_only": True},
+            "is_active": {"read_only": True},
+            "is_staff": {"read_only": True},
+            "is_superuser": {"read_only": True},
         }
