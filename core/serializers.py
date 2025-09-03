@@ -15,7 +15,7 @@ class SignupSerializer(serializers.Serializer):
         validators=[
             UniqueValidator(
                 queryset=get_user_model().objects.all(),
-                message="This email address is already in use"
+                message="This email address is already in use",
             )
         ],
         error_messages={
@@ -33,13 +33,13 @@ class SignupSerializer(serializers.Serializer):
             validators.username_validator,
             UniqueValidator(
                 queryset=get_user_model().objects.all(),
-                message="This username is already in use"),
+                message="This username is already in use",
+            ),
         ],
         error_messages={
             "max_length": "The username can be at most 30 characters",
-            "min_length": "The username must be at least 5 characters"
+            "min_length": "The username must be at least 5 characters",
         },
-
     )
 
     phone_number = serializers.CharField(
@@ -48,7 +48,8 @@ class SignupSerializer(serializers.Serializer):
             validators.phone_number_validator,
             UniqueValidator(
                 queryset=get_user_model().objects.all(),
-                message="This phone number is already in use")
+                message="This phone number is already in use",
+            ),
         ],
         error_messages={
             "max_length": "The phone number can be at most 11 characters",
@@ -66,15 +67,29 @@ class SignupSerializer(serializers.Serializer):
             "max_length": "The password can be at most 24 characters long",
             "min_length": "The password must be at least 8 characters long",
             "required": "The password field is required",
-        }
+        },
     )
+
+    password_confirmation = serializers.CharField(
+        required=True,
+        write_only=True,
+    )
+
+    def validate(self, attrs: dict):
+        password = attrs.get("password")
+        password_confirmation = attrs.get(password_confirmation)
+
+        if password != password_confirmation:
+            raise serializers.ValidationError(
+                "password and password confirmation must be"
+            )
 
     def create(self, validated_data):
         new_user = get_user_model().objects.create_user(**validated_data)
 
         return {
             "response": f"user with the username of: {new_user.username} "
-                        f"and id of: {new_user.id} has been created successfully"
+            f"and id of: {new_user.id} has been created successfully"
         }
 
 
