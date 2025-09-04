@@ -23,7 +23,6 @@ SERVER_TYPE_STATUS = os.environ.get("SERVER_TYPE_STATUS")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -34,7 +33,6 @@ SECRET_KEY = "django-insecure-wb-fu$47%kbn^2sjwkt=yjs*9nne%s^$won%&e#-jhu!uc0bom
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -85,7 +83,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "base.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -99,7 +96,6 @@ DATABASES = {
         "PORT": os.environ.get("PG_DATABASE_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -119,7 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -130,7 +125,6 @@ TIME_ZONE = "Asia/Tehran"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -145,7 +139,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # The project user model reference:
 AUTH_USER_MODEL = "core.User"
 
-# debug-toolbar IP:
+# Debug-toolbar IP:
 if SERVER_TYPE_STATUS == "development":
     INTERNAL_IPS = [
         "127.0.0.1",
@@ -160,7 +154,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-# simple jwt token settings:
+# Simple jwt token settings:
 SIMPLE_JWT = {
     "ALGORITHM": "HS256",  # Hint: HS384 and HS512 can be used for more security!
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=4),
@@ -177,5 +171,6 @@ SPECTACULAR_SETTINGS = {
     "TAGS": [
         {"name": "project info"},
         {"name": "core authentication"},
+        {"name": "core administration"}
     ],
 }

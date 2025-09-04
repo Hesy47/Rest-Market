@@ -37,12 +37,12 @@ class SignupView(APIView):
 class LoginView(APIView):
     """The login endpoint APIView"""
 
-    serializer_class = serializers.UserAdminManagementSerializer
+    serializer_class = serializers.LoginSerializer
     permission_classes = [permissions.IsAnonymous]
 
     @extend_schema(tags=["core authentication"])
     def post(self, request):
-        serializer = serializers.LoginSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         response = serializer.save()
 
