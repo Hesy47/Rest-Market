@@ -143,6 +143,68 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
+class ProfileSerializer(serializers.Serializer):
+    """The profile endpoint serializer"""
+
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    username = serializers.CharField(read_only=True)
+
+    phone_number = serializers.CharField(
+        allow_blank=True,
+        validators=[
+            validators.phone_number_validator,
+            UniqueValidator(
+                queryset=get_user_model().objects.all(),
+                message="This phone number is already in use",
+            ),
+        ],
+        error_messages={
+            "max_length": "The phone number can be at most 11 characters",
+        },
+    )
+    password = serializers.CharField(
+        allow_blank=True,
+        max_length=24,
+        min_length=8,
+        write_only=True,
+        style={"input_type": "password"},
+        validators=[validators.password_validator],
+        error_messages={
+            "max_length": "The password can be at most 24 characters long",
+            "min_length": "The password must be at least 8 characters long",
+        },
+    )
+
+    password_confirmation = serializers.CharField(
+        allow_blank=True,
+        write_only=True,
+        style={"input_type": "password"},
+    )
+
+    def validate(self, attrs: dict):
+        password = attrs.get("password")
+        password_confirmation = attrs.pop("password_confirmation")
+
+        if password != password_confirmation:
+            raise serializers.ValidationError(
+                "password and password confirmation must be similar"
+            )
+        return attrs
+
+    def update(self, instance, validated_data):
+        phone_number = validated_data.get("phone_number")
+        if phone_number and phone_number.strip():
+            instance.phone_number = phone_number
+
+        password = validated_data.get("password")
+        if password and password.strip():
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
+
 class UserAdminManagementSerializer(serializers.ModelSerializer):
     """The user admin management serializer"""
 

@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from core import serializers, permissions
@@ -47,6 +48,24 @@ class LoginView(APIView):
         response = serializer.save()
 
         return Response(response, status.HTTP_202_ACCEPTED)
+
+
+@extend_schema(tags=["core authentication"])
+class ProfileView(RetrieveUpdateAPIView):
+    """The profile endpoint Generic view"""
+
+    serializer_class = serializers.ProfileSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = get_user_model().objects.all()
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        response.data = {"response": "profile updated successfully"}
+
+        return response
 
 
 @extend_schema(tags=["core administration"])
