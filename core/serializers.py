@@ -92,7 +92,7 @@ class SignupSerializer(serializers.Serializer):
 
         return {
             "response": f"user with the username of: {new_user.username} "
-                        f"and id of: {new_user.id} has been created successfully"
+            f"and id of: {new_user.id} has been created successfully"
         }
 
 
@@ -193,13 +193,13 @@ class ProfileSerializer(serializers.Serializer):
         return attrs
 
     def update(self, instance, validated_data):
-        phone_number = validated_data.get("phone_number")
-        if phone_number and phone_number.strip():
-            instance.phone_number = phone_number
-
-        password = validated_data.get("password")
+        password = validated_data.pop("password")
         if password and password.strip():
             instance.set_password(password)
+
+        for key, value in validated_data.items():
+            if key and value.strip():
+                setattr(instance, key, value)
 
         instance.save()
         return instance
@@ -218,7 +218,7 @@ class UserAdminManagementSerializer(serializers.ModelSerializer):
             "date_joined",
             "is_active",
             "is_staff",
-            "is_superuser"
+            "is_superuser",
         )
 
         extra_kwargs = {

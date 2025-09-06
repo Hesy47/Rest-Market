@@ -1,4 +1,1 @@
-value="            "
-
-if value.strip():
-    print("yes")
+print("Testing...")
