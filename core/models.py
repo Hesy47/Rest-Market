@@ -71,4 +71,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     class Meta:
-        db_table = "users"
+        db_table = "core-users"
