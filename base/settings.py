@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
+    "shop",
     "rest_framework",
     "drf_spectacular",
 ]
@@ -129,7 +130,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+# Static folder path settings on Disk
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Media folder path settings on Disk:
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -171,6 +178,6 @@ SPECTACULAR_SETTINGS = {
     "TAGS": [
         {"name": "project info"},
         {"name": "core authentication"},
-        {"name": "core administration"}
+        {"name": "core administration"},
     ],
 }
