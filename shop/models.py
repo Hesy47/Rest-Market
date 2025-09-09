@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 import os
 
 
-class ApplicationImageHandler(models.Model):
+class SingleImageHandler(models.Model):
     """The base abstract model to handel application image processing"""
 
     class Meta:
@@ -46,7 +46,7 @@ class ApplicationImageHandler(models.Model):
         super().save(*args, **kwargs)
 
 
-class Category(ApplicationImageHandler):
+class Category(SingleImageHandler):
     """The category database model"""
 
     title = models.CharField(
@@ -67,7 +67,7 @@ class Category(ApplicationImageHandler):
         db_table = "shop-categories"
 
 
-class DesktopBanner(ApplicationImageHandler):
+class DesktopBanner(SingleImageHandler):
     """The desktop banner database model"""
 
     title = models.CharField(
@@ -104,7 +104,7 @@ class DesktopBanner(ApplicationImageHandler):
         db_table = "shop-desktop-banners"
 
 
-class MobileBanner(ApplicationImageHandler):
+class MobileBanner(SingleImageHandler):
     """The Mobile banner database model"""
 
     title = models.CharField(
@@ -138,3 +138,17 @@ class MobileBanner(ApplicationImageHandler):
 
     class Meta:
         db_table = "shop-mobile-banners"
+
+
+class Product(models.Model):
+    """The Product database model"""
+
+    title = models.CharField(
+        max_length=60,
+        unique=True,
+        error_messages={"unique": "Product with this title is already exist"},
+    )
+
+    price = models.DecimalField(max_digits=12, decimal_places=0)
+    description = models.TextField()
+    is_available = models.BooleanField(default=True)
