@@ -152,4 +152,4 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=0)
     description = models.TextField()
     is_available = models.BooleanField(default=True)
-    collection = models.ForeignKey()
+    collection = models.ForeignKey(Category, models.CASCADE)
