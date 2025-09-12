@@ -7,6 +7,7 @@ class UserProductsSerializer(serializers.ModelSerializer):
 
     category = serializers.StringRelatedField()
     owner = serializers.StringRelatedField()
+    price = serializers.IntegerField()
 
     class Meta:
         model = models.Product
