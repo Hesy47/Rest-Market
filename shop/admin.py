@@ -24,3 +24,19 @@ class MobileBannerAdmin(admin.ModelAdmin):
     ordering = ["id"]
     search_fields = ["title"]
     list_per_page = 16
+
+
+@admin.register(models.Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "title",
+        "description",
+        "price",
+        "category",
+        "owner",
+        "is_available",
+    ]
+    ordering = ["id"]
+    search_fields = ["title"]
+    list_per_page = 16

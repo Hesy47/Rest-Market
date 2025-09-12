@@ -1,8 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
+from django.contrib.auth import get_user_model
 from PIL import Image, UnidentifiedImageError
 from io import BytesIO
-from django.core.files.base import ContentFile
 import os
 
 
@@ -63,6 +64,9 @@ class Category(SingleImageHandler):
 
     image = models.ImageField(upload_to="images/categories")
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         db_table = "shop-categories"
 
@@ -100,6 +104,9 @@ class DesktopBanner(SingleImageHandler):
         if self.image and self.image.height > 403:
             raise ValidationError("Image height must between 400 and 403")
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         db_table = "shop-desktop-banners"
 
@@ -136,6 +143,9 @@ class MobileBanner(SingleImageHandler):
         if self.image and self.image.height > 183:
             raise ValidationError("Image height must between 180 and 183")
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         db_table = "shop-mobile-banners"
 
@@ -152,4 +162,11 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=0)
     description = models.TextField()
     is_available = models.BooleanField(default=True)
-    collection = models.ForeignKey(Category, models.CASCADE)
+    category = models.ForeignKey(Category, models.CASCADE)
+    owner = models.ForeignKey(get_user_model(), models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = "shop-products"

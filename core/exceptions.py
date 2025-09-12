@@ -46,7 +46,7 @@ def custom_exception_handler(exc, context):
                 "message": "Authentication failed",
                 "errors": errors,
             },
-            status=status.HTTP_401_UNAUTHORIZED,
+            status=response.status_code if response else status.HTTP_401_UNAUTHORIZED,
         )
 
     return response

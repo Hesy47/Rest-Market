@@ -179,5 +179,6 @@ SPECTACULAR_SETTINGS = {
         {"name": "project info"},
         {"name": "core authentication"},
         {"name": "core administration"},
+        {"name": "shop"},
     ],
 }

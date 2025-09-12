@@ -78,13 +78,19 @@ class SignupSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs: dict):
+        errors = {}
+
         password = attrs.get("password")
         password_confirmation = attrs.pop("password_confirmation")
 
         if password != password_confirmation:
-            raise serializers.ValidationError(
-                "password and password confirmation must be similar"
+            errors["password_confirmation"] = (
+                "password and password confirmation are not similar"
             )
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
         return attrs
 
     def create(self, validated_data):
