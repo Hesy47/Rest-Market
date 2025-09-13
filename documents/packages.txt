@@ -1,0 +1,8 @@
+pip install Django
+pip install djangorestframework
+pip install django-debug-toolbar
+pip install psycopg2
+pip install python-dotenv
+pip install drf-spectacular 
+pip install djangorestframework-simplejwt
+pip install pillow
